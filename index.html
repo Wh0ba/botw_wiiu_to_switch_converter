@@ -1,344 +1,1000 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BotW Save Converter: Wii U → Switch</title>
-<style>
-:root{color-scheme:dark;--bg:#101b1b;--fg:#f5efd9;--mut:#b8c5b7;--card:rgba(21,39,37,.92);--bd:rgba(225,199,126,.36);--gold:#e5c779;--gold-bright:#f4df9d;--green:#466a4b;--green-dark:#263f37;--bad:#ff9b86;--hl:rgba(116,153,100,.18)}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(ellipse at 50% 0%,rgba(97,133,98,.24),transparent 34rem),linear-gradient(180deg,#172624 0%,#101b1b 54%,#14221f 100%);color:var(--fg);font:16px/1.6 Georgia,"Palatino Linotype",serif;min-height:100vh}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 16 64 28 76 24 72 36 84 40 72 44 76 56 64 52 60 64 56 52 44 56 48 44 36 40 48 36 44 24 56 28Z' fill='none' stroke='%23e5c779' stroke-opacity='.48'/%3E%3Ccircle cx='60' cy='40' r='25' fill='none' stroke='%23e5c779' stroke-opacity='.3'/%3E%3C/svg%3E");background-size:120px 120px}
-main{max-width:1050px;margin:0 auto;padding:30px 22px 64px;position:relative}
-.hero{text-align:center;padding:32px 16px 28px;position:relative}
-.crest{width:72px;height:72px;margin:0 auto 12px;color:var(--gold);filter:drop-shadow(0 0 16px rgba(229,199,121,.3))}
-.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;font:600 .72rem/1.4 system-ui,sans-serif;margin:0 0 7px}
-h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.15;letter-spacing:.02em;text-shadow:0 3px 25px rgba(229,199,121,.22);margin:0 0 12px}
-p.sub{color:var(--mut);max-width:650px;margin:0 auto 16px;font-size:1.05rem}
-.badge{display:inline-flex;align-items:center;gap:8px;color:#e8dfc7;background:rgba(20,35,32,.74);border:1px solid var(--bd);border-radius:99px;padding:5px 13px;font:500 .78rem/1.5 system-ui,sans-serif}
-.badge:before{content:"✦";color:var(--gold)}
-.scenery{display:block;width:100%;height:auto;max-height:160px;margin:14px auto -3px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:680px){.grid{grid-template-columns:1fr}main{padding:16px 14px 48px}.hero{padding:22px 6px 20px}.scenery{height:100px}}
-.zone{background:var(--card);border:1px solid var(--bd);border-radius:15px;padding:21px;box-shadow:0 12px 35px rgba(0,0,0,.2);transition:border-color .18s,background .18s,transform .18s}
-.zone.over{border-color:var(--gold);background:var(--hl);transform:translateY(-2px)}
-.zone-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.zone-mark{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--bd);border-radius:50%;color:var(--gold);font:600 .95rem system-ui,sans-serif;flex:none}
-.zone h2{font-size:1.15rem;margin:0}
-.zone small{color:var(--mut);display:block;margin:0 0 14px}
-.browse{background:linear-gradient(135deg,#d9bd70,#b99348);color:#18211b;border:0;border-radius:8px;padding:9px 15px;font:700 .88rem/1.2 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.2);transition:filter .15s,transform .15s}
-.browse:hover,button:hover,a.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.browse:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}
-.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid rgba(225,199,126,.18);font: .85rem/1.4 system-ui,sans-serif}
-.row .n{font-weight:650}
-.row .s{color:var(--mut);text-align:right;overflow-wrap:anywhere}
-.row .s.ok{color:#b4d79b}
-.row .s.err{color:var(--bad)}
-section.out{margin-top:20px;background:var(--card);border:1px solid var(--bd);border-radius:15px;padding:21px;box-shadow:0 12px 35px rgba(0,0,0,.18)}
-section.out h2{font-size:1.2rem;margin:0 0 8px}
-.file{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(225,199,126,.18);font: .88rem/1.4 system-ui,sans-serif}
-button,a.btn{background:linear-gradient(135deg,#d9bd70,#b99348);color:#18211b;border:0;border-radius:8px;padding:9px 15px;font:700 .88rem/1.3 system-ui,sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:filter .15s,transform .15s}
-button.sec,a.btn.sec{background:transparent;color:var(--gold-bright);border:1px solid var(--bd)}
-ul.notes{margin:10px 0 0;padding-left:20px;color:var(--mut);font: .86rem/1.6 system-ui,sans-serif}
-.warn{margin-top:14px;font: .82rem/1.6 system-ui,sans-serif;color:var(--mut)}
-.hidden{display:none!important}
-.resource{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:18px 21px;background:linear-gradient(115deg,rgba(49,77,59,.92),rgba(21,39,37,.92));border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.16)}
-.resource h2{font-size:1.05rem;margin:0 0 3px}
-.resource p{color:var(--mut);margin:0;font: .85rem/1.5 system-ui,sans-serif}
-.resource a{flex:none}
-@media(max-width:580px){.resource{align-items:flex-start;flex-direction:column}}
-.faith{margin-top:70px;padding-top:28px;border-top:1px solid var(--bd)}
-.faith-intro{text-align:center;max-width:690px;margin:0 auto 24px}
-.faith .eyebrow{margin-bottom:5px}
-.faith h2{font-size:clamp(1.5rem,3vw,2rem);margin:0 0 7px}
-.faith-intro p{color:var(--mut);margin:0}
-.faith-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.quote{margin:0;padding:19px;background:rgba(21,39,37,.76);border:1px solid var(--bd);border-radius:13px}
-.quote h3{margin:0 0 7px;color:var(--gold-bright);font:600 .78rem/1.4 system-ui,sans-serif;letter-spacing:.04em}
-.quote blockquote{margin:0 0 9px;font-size:1.05rem;line-height:1.65}
-.quote p{margin:0;color:var(--mut);font: .8rem/1.5 system-ui,sans-serif}
-.faith-note{text-align:center;color:var(--mut);font: .8rem/1.6 system-ui,sans-serif;margin:19px auto 0;max-width:720px}
-footer{text-align:center;color:var(--mut);font: .75rem/1.5 system-ui,sans-serif;margin-top:34px}
-@media(max-width:580px){.faith-grid{grid-template-columns:1fr}.zone{padding:17px}.file{align-items:flex-start}}
-</style>
-</head>
-<body>
-<main>
-  <header class="hero">
-    <svg class="crest" viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M50 12 62 37 88 41 69 60 74 87 50 74 26 87 31 60 12 41 38 37Z" fill="none" stroke="currentColor" stroke-width="2"/>
-      <path d="M50 28 57 43 73 45 61 57 64 73 50 65 36 73 39 57 27 45 43 43Z" fill="currentColor" opacity=".8"/>
-      <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 5"/>
-    </svg>
-    <p class="eyebrow">A little field guide for your save files</p>
-    <h1>BotW Save Converter</h1>
-    <p class="sub">Carry your Breath of the Wild adventure from Wii U to Switch. Choose your saves below—everything is converted right here in your browser, and your files are never uploaded.</p>
-    <span class="badge">Built with AI assistance · save conversion runs locally</span>
-    <svg class="scenery" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-      <defs><linearGradient id="sunset" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#e5c779" stop-opacity=".24"/><stop offset="1" stop-color="#e5c779" stop-opacity="0"/></linearGradient></defs>
-      <circle cx="500" cy="100" r="68" fill="url(#sunset)"/><circle cx="500" cy="100" r="34" fill="none" stroke="#e5c779" stroke-opacity=".6"/>
-      <path d="M0 126 116 76l71 34 132-72 105 74 91-50 105 42 117-74 104 70 73-36 86 43v43H0Z" fill="#263e36"/>
-      <path d="m187 110 132-72 69 49-22-5-21 7-20-4-12 9-22-2-15 8-20-1-18 9Z" fill="#68805c" opacity=".65"/>
-      <path d="m620 101 117-71 83 56-23-8-22 8-18-5-18 10-19-2-16 9-21-2-19 9Z" fill="#68805c" opacity=".55"/>
-      <path d="M0 136q130-30 260 0t260 0 260 0 220 0v14H0Z" fill="#172a27"/>
-      <path d="M64 122v-17m-7 17v-9m14 9v-12m765 12v-18m-8 18v-10m16 10v-13" stroke="#d4ba71" stroke-opacity=".7" stroke-width="2"/>
-    </svg>
-  </header>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>BotW Save Converter: Wii U → Switch</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #101b1b;
+				--fg: #f5efd9;
+				--mut: #b8c5b7;
+				--card: rgba(21, 39, 37, 0.92);
+				--bd: rgba(225, 199, 126, 0.36);
+				--gold: #e5c779;
+				--gold-bright: #f4df9d;
+				--green: #466a4b;
+				--green-dark: #263f37;
+				--bad: #ff9b86;
+				--hl: rgba(116, 153, 100, 0.18);
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				margin: 0;
+				background:
+					radial-gradient(
+						ellipse at 50% 0%,
+						rgba(97, 133, 98, 0.24),
+						transparent 34rem
+					),
+					linear-gradient(
+						180deg,
+						#172624 0%,
+						#101b1b 54%,
+						#14221f 100%
+					);
+				color: var(--fg);
+				font:
+					16px/1.6 Georgia,
+					"Palatino Linotype",
+					serif;
+				min-height: 100vh;
+			}
+			body:before {
+				content: "";
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				opacity: 0.13;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 16 64 28 76 24 72 36 84 40 72 44 76 56 64 52 60 64 56 52 44 56 48 44 36 40 48 36 44 24 56 28Z' fill='none' stroke='%23e5c779' stroke-opacity='.48'/%3E%3Ccircle cx='60' cy='40' r='25' fill='none' stroke='%23e5c779' stroke-opacity='.3'/%3E%3C/svg%3E");
+				background-size: 120px 120px;
+			}
+			main {
+				max-width: 1050px;
+				margin: 0 auto;
+				padding: 30px 22px 64px;
+				position: relative;
+			}
+			.hero {
+				text-align: center;
+				padding: 32px 16px 28px;
+				position: relative;
+			}
+			.crest {
+				width: 72px;
+				height: 72px;
+				margin: 0 auto 12px;
+				color: var(--gold);
+				filter: drop-shadow(0 0 16px rgba(229, 199, 121, 0.3));
+			}
+			.eyebrow {
+				color: var(--gold);
+				text-transform: uppercase;
+				letter-spacing: 0.2em;
+				font:
+					600 0.72rem/1.4 system-ui,
+					sans-serif;
+				margin: 0 0 7px;
+			}
+			h1 {
+				font-size: clamp(2rem, 5vw, 3.2rem);
+				line-height: 1.15;
+				letter-spacing: 0.02em;
+				text-shadow: 0 3px 25px rgba(229, 199, 121, 0.22);
+				margin: 0 0 12px;
+			}
+			p.sub {
+				color: var(--mut);
+				max-width: 650px;
+				margin: 0 auto 16px;
+				font-size: 1.05rem;
+			}
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				color: #e8dfc7;
+				background: rgba(20, 35, 32, 0.74);
+				border: 1px solid var(--bd);
+				border-radius: 99px;
+				padding: 5px 13px;
+				font:
+					500 0.78rem/1.5 system-ui,
+					sans-serif;
+			}
+			.badge:before {
+				content: "✦";
+				color: var(--gold);
+			}
+			.scenery {
+				display: block;
+				width: 100%;
+				height: auto;
+				max-height: 160px;
+				margin: 14px auto -3px;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 18px;
+			}
+			@media (max-width: 680px) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+				main {
+					padding: 16px 14px 48px;
+				}
+				.hero {
+					padding: 22px 6px 20px;
+				}
+				.scenery {
+					height: 100px;
+				}
+			}
+			.zone {
+				background: var(--card);
+				border: 1px solid var(--bd);
+				border-radius: 15px;
+				padding: 21px;
+				box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+				transition:
+					border-color 0.18s,
+					background 0.18s,
+					transform 0.18s;
+			}
+			.zone.over {
+				border-color: var(--gold);
+				background: var(--hl);
+				transform: translateY(-2px);
+			}
+			.zone-head {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 4px;
+			}
+			.zone-mark {
+				display: grid;
+				place-items: center;
+				width: 36px;
+				height: 36px;
+				border: 1px solid var(--bd);
+				border-radius: 50%;
+				color: var(--gold);
+				font:
+					600 0.95rem system-ui,
+					sans-serif;
+				flex: none;
+			}
+			.zone h2 {
+				font-size: 1.15rem;
+				margin: 0;
+			}
+			.zone small {
+				color: var(--mut);
+				display: block;
+				margin: 0 0 14px;
+			}
+			.browse {
+				background: linear-gradient(135deg, #d9bd70, #b99348);
+				color: #18211b;
+				border: 0;
+				border-radius: 8px;
+				padding: 9px 15px;
+				font:
+					700 0.88rem/1.2 system-ui,
+					sans-serif;
+				cursor: pointer;
+				box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+				transition:
+					filter 0.15s,
+					transform 0.15s;
+			}
+			.browse:hover,
+			button:hover,
+			a.btn:hover {
+				filter: brightness(1.1);
+				transform: translateY(-1px);
+			}
+			.browse:focus-visible,
+			button:focus-visible,
+			a:focus-visible {
+				outline: 2px solid var(--gold-bright);
+				outline-offset: 3px;
+			}
+			.row {
+				display: flex;
+				justify-content: space-between;
+				gap: 10px;
+				padding: 8px 0;
+				border-top: 1px solid rgba(225, 199, 126, 0.18);
+				font:
+					0.85rem/1.4 system-ui,
+					sans-serif;
+			}
+			.row .n {
+				font-weight: 650;
+			}
+			.row .s {
+				color: var(--mut);
+				text-align: right;
+				overflow-wrap: anywhere;
+			}
+			.row .s.ok {
+				color: #b4d79b;
+			}
+			.row .s.err {
+				color: var(--bad);
+			}
+			section.out {
+				margin-top: 20px;
+				background: var(--card);
+				border: 1px solid var(--bd);
+				border-radius: 15px;
+				padding: 21px;
+				box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+			}
+			section.out h2 {
+				font-size: 1.2rem;
+				margin: 0 0 8px;
+			}
+			.file {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 10px;
+				padding: 9px 0;
+				border-top: 1px solid rgba(225, 199, 126, 0.18);
+				font:
+					0.88rem/1.4 system-ui,
+					sans-serif;
+			}
+			button,
+			a.btn {
+				background: linear-gradient(135deg, #d9bd70, #b99348);
+				color: #18211b;
+				border: 0;
+				border-radius: 8px;
+				padding: 9px 15px;
+				font:
+					700 0.88rem/1.3 system-ui,
+					sans-serif;
+				cursor: pointer;
+				text-decoration: none;
+				display: inline-block;
+				transition:
+					filter 0.15s,
+					transform 0.15s;
+			}
+			button.sec,
+			a.btn.sec {
+				background: transparent;
+				color: var(--gold-bright);
+				border: 1px solid var(--bd);
+			}
+			ul.notes {
+				margin: 10px 0 0;
+				padding-left: 20px;
+				color: var(--mut);
+				font:
+					0.86rem/1.6 system-ui,
+					sans-serif;
+			}
+			.warn {
+				margin-top: 14px;
+				font:
+					0.82rem/1.6 system-ui,
+					sans-serif;
+				color: var(--mut);
+			}
+			.hidden {
+				display: none !important;
+			}
+			.resource {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 18px;
+				margin-top: 18px;
+				padding: 18px 21px;
+				background: linear-gradient(
+					115deg,
+					rgba(49, 77, 59, 0.92),
+					rgba(21, 39, 37, 0.92)
+				);
+				border: 1px solid var(--bd);
+				border-radius: 14px;
+				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+			}
+			.resource h2 {
+				font-size: 1.05rem;
+				margin: 0 0 3px;
+			}
+			.resource p {
+				color: var(--mut);
+				margin: 0;
+				font:
+					0.85rem/1.5 system-ui,
+					sans-serif;
+			}
+			.resource a {
+				flex: none;
+			}
+			@media (max-width: 580px) {
+				.resource {
+					align-items: flex-start;
+					flex-direction: column;
+				}
+			}
+			.faith {
+				margin-top: 70px;
+				padding-top: 28px;
+				border-top: 1px solid var(--bd);
+			}
+			.faith-intro {
+				text-align: center;
+				max-width: 690px;
+				margin: 0 auto 24px;
+			}
+			.faith .eyebrow {
+				margin-bottom: 5px;
+			}
+			.faith h2 {
+				font-size: clamp(1.5rem, 3vw, 2rem);
+				margin: 0 0 7px;
+			}
+			.faith-intro p {
+				color: var(--mut);
+				margin: 0;
+			}
+			.faith-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 14px;
+			}
+			.quote {
+				margin: 0;
+				padding: 19px;
+				background: rgba(21, 39, 37, 0.76);
+				border: 1px solid var(--bd);
+				border-radius: 13px;
+			}
+			.quote h3 {
+				margin: 0 0 7px;
+				color: var(--gold-bright);
+				font:
+					600 0.78rem/1.4 system-ui,
+					sans-serif;
+				letter-spacing: 0.04em;
+			}
+			.quote blockquote {
+				margin: 0 0 9px;
+				font-size: 1.05rem;
+				line-height: 1.65;
+			}
+			.quote p {
+				margin: 0;
+				color: var(--mut);
+				font:
+					0.8rem/1.5 system-ui,
+					sans-serif;
+			}
+			.faith-note {
+				text-align: center;
+				color: var(--mut);
+				font:
+					0.8rem/1.6 system-ui,
+					sans-serif;
+				margin: 19px auto 0;
+				max-width: 720px;
+			}
+			footer {
+				text-align: center;
+				color: var(--mut);
+				font:
+					0.75rem/1.5 system-ui,
+					sans-serif;
+				margin-top: 34px;
+			}
+			@media (max-width: 580px) {
+				.faith-grid {
+					grid-template-columns: 1fr;
+				}
+				.zone {
+					padding: 17px;
+				}
+				.file {
+					align-items: flex-start;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<header class="hero">
+				<p class="eyebrow">A little field guide for your save files</p>
+				<h1>The Legend Of Zelda: Breath of the Wild Save Converter</h1>
+				<p class="sub">
+					Carry your Breath of the Wild adventure from Wii U to
+					Switch. Choose your saves below—everything is converted
+					right here in your browser, and your files are never
+					uploaded.
+				</p>
+				<span class="badge"
+					>Built with AI assistance · save conversion runs
+					locally</span
+				>
+				<svg
+					class="scenery"
+					viewBox="0 0 1000 150"
+					preserveAspectRatio="xMidYMax meet"
+					aria-hidden="true">
+					<defs>
+						<linearGradient id="sunset" x1="0" x2="0" y1="0" y2="1">
+							<stop stop-color="#e5c779" stop-opacity=".24" />
+							<stop
+								offset="1"
+								stop-color="#e5c779"
+								stop-opacity="0" />
+						</linearGradient>
+					</defs>
+					<circle cx="500" cy="100" r="68" fill="url(#sunset)" />
+					<circle
+						cx="500"
+						cy="100"
+						r="34"
+						fill="none"
+						stroke="#e5c779"
+						stroke-opacity=".6" />
+					<path
+						d="M0 126 116 76l71 34 132-72 105 74 91-50 105 42 117-74 104 70 73-36 86 43v43H0Z"
+						fill="#263e36" />
+					<path
+						d="m187 110 132-72 69 49-22-5-21 7-20-4-12 9-22-2-15 8-20-1-18 9Z"
+						fill="#68805c"
+						opacity=".65" />
+					<path
+						d="m620 101 117-71 83 56-23-8-22 8-18-5-18 10-19-2-16 9-21-2-19 9Z"
+						fill="#68805c"
+						opacity=".55" />
+					<path
+						d="M0 136q130-30 260 0t260 0 260 0 220 0v14H0Z"
+						fill="#172a27" />
+					<path
+						d="M64 122v-17m-7 17v-9m14 9v-12m765 12v-18m-8 18v-10m16 10v-13"
+						stroke="#d4ba71"
+						stroke-opacity=".7"
+						stroke-width="2" />
+				</svg>
+			</header>
 
-  <div class="grid">
-    <div class="zone" id="zone-wiiu">
-      <div class="zone-head"><span class="zone-mark" aria-hidden="true">I</span><h2>Wii U files <span style="color:var(--gold)">· source</span></h2></div>
-      <small>Choose the save files from your Wii U backup, or drag and drop them here.</small>
-      <button class="browse" id="browse-wiiu" type="button">Browse Wii U files</button>
-      <div id="rows-wiiu"></div>
-    </div>
-    <div class="zone" id="zone-switch">
-      <div class="zone-head"><span class="zone-mark" aria-hidden="true">II</span><h2>Switch files <span style="color:var(--gold)">· templates</span></h2></div>
-      <small>Choose a valid Switch save from the same game; it provides the layout template.</small>
-      <button class="browse" id="browse-switch" type="button">Browse Switch files</button>
-      <div id="rows-switch"></div>
-    </div>
-  </div>
-  <input type="file" id="picker" multiple class="hidden">
+			<div class="grid">
+				<div class="zone" id="zone-wiiu">
+					<div class="zone-head">
+						<span class="zone-mark" aria-hidden="true">I</span>
+						<h2>
+							Wii U files
+							<span style="color: var(--gold)">· source</span>
+						</h2>
+					</div>
+					<small
+						>Choose the save files from your Wii U backup, or drag
+						and drop them here.</small
+					>
+					<button class="browse" id="browse-wiiu" type="button">
+						Browse Wii U files
+					</button>
+					<div id="rows-wiiu"></div>
+				</div>
+				<div class="zone" id="zone-switch">
+					<div class="zone-head">
+						<span class="zone-mark" aria-hidden="true">II</span>
+						<h2>
+							Switch files
+							<span style="color: var(--gold)">· templates</span>
+						</h2>
+					</div>
+					<small
+						>Choose a valid Switch save from the same game; it
+						provides the layout template.</small
+					>
+					<button class="browse" id="browse-switch" type="button">
+						Browse Switch files
+					</button>
+					<div id="rows-switch"></div>
+				</div>
+			</div>
+			<input type="file" id="picker" multiple class="hidden" />
 
-  <section class="out hidden" id="out">
-    <h2>Converted files for the Switch slot</h2>
-    <div id="files"></div>
-    <div style="margin-top:12px"><button id="zipbtn">Download all (.zip)</button></div>
-    <ul class="notes" id="notes"></ul>
-    <p class="warn">Back up your whole Switch slot folder first. Replace only these files and leave the rest of the folder alone. Conversion from Wii U v1.5 to Switch v1.8 is unofficial and may not be accepted by every game or emulator build.</p>
-  </section>
-  <aside class="resource" aria-label="Save editing resource">
-    <div>
-      <h2>Want to edit your save file?</h2>
-      <p>For editing, visit The Save Editor by Marc Robledo.</p>
-    </div>
-    <a class="btn sec" href="https://www.marcrobledo.com/savegame-editors/zelda-botw/" target="_blank" rel="noopener noreferrer">Visit the Save Editor ↗</a>
-  </aside>
-  <section class="faith" aria-labelledby="faith-title">
-    <div class="faith-intro">
-      <p class="eyebrow">A quiet moment for the heart</p>
-      <h2 id="faith-title">Words on mercy and faith</h2>
-      <p>For visitors curious about Islam, these passages speak of hope, compassion, and a faith embraced freely.</p>
-    </div>
-    <div class="faith-grid">
-      <article class="quote">
-        <h3>Qur'an · 39:53</h3>
-        <blockquote>“Do not despair of the mercy of Allah. Indeed, Allah forgives all sins.”</blockquote>
-        <p>Meaning of the verse · Saheeh International</p>
-      </article>
-      <article class="quote">
-        <h3>Qur'an · 2:256</h3>
-        <blockquote>“There is no compulsion in religion; the right way has become distinct from the wrong.”</blockquote>
-        <p>Meaning of the verse · Saheeh International</p>
-      </article>
-      <article class="quote">
-        <h3>Hadith · Sahih Muslim 2747</h3>
-        <blockquote>“Allah is more pleased with the repentance of His servant than one of you who finds their lost mount in the desert.”</blockquote>
-        <p>Meaning of the hadith · Sahih Muslim</p>
-      </article>
-      <article class="quote">
-        <h3>Hadith · Sahih al-Bukhari 8</h3>
-        <blockquote>“Islam is built upon five”: testifying that none is worthy of worship except Allah and that Muhammad is the Messenger of Allah, establishing prayer, giving zakah, pilgrimage, and fasting Ramadan.</blockquote>
-        <p>Meaning of the hadith · Sahih al-Bukhari</p>
-      </article>
-    </div>
-    <p class="faith-note">Translations above convey the meaning; wording may vary between translations. If you would like to learn more, consider speaking with a knowledgeable Muslim or visiting a local mosque—at your own pace.</p>
-  </section>
-  <footer>May your journey be filled with wonder.</footer>
-</main>
+			<section class="out hidden" id="out">
+				<h2>Converted files for the Switch slot</h2>
+				<div id="files"></div>
+				<div style="margin-top: 12px">
+					<button id="zipbtn">Download all (.zip)</button>
+				</div>
+				<ul class="notes" id="notes"></ul>
+				<p class="warn">
+					Back up your whole Switch slot folder first. Replace only
+					these files and leave the rest of the folder alone.
+					Conversion from Wii U v1.5 to Switch v1.8 is unofficial and
+					may not be accepted by every game or emulator build.
+				</p>
+			</section>
+			<aside class="resource" aria-label="Save editing resource">
+				<div>
+					<h2>Want to edit your save file?</h2>
+					<p>For editing, visit The Save Editor by Marc Robledo.</p>
+				</div>
+				<a
+					class="btn sec"
+					href="https://www.marcrobledo.com/savegame-editors/zelda-botw/"
+					target="_blank"
+					rel="noopener noreferrer"
+					>Visit the Save Editor ↗</a
+				>
+			</aside>
+			<section class="faith" aria-labelledby="faith-title">
+				<div class="faith-intro">
+					<p class="eyebrow">A quiet moment for the heart</p>
+					<h2 id="faith-title">Words on mercy and faith</h2>
+					<p>
+						For visitors curious about Islam, these passages speak
+						of hope, compassion, and a faith embraced freely.
+					</p>
+				</div>
+				<div class="faith-grid">
+					<article class="quote">
+						<h3>Qur'an · 39:53</h3>
+						<blockquote>
+							“Do not despair of the mercy of Allah. Indeed, Allah
+							forgives all sins.”
+						</blockquote>
+						<p>Meaning of the verse · Saheeh International</p>
+					</article>
+					<article class="quote">
+						<h3>Qur'an · 2:256</h3>
+						<blockquote>
+							“There is no compulsion in religion; the right way
+							has become distinct from the wrong.”
+						</blockquote>
+						<p>Meaning of the verse · Saheeh International</p>
+					</article>
+					<article class="quote">
+						<h3>Hadith · Sahih Muslim 2747</h3>
+						<blockquote>
+							“Allah is more pleased with the repentance of His
+							servant than one of you who finds their lost mount
+							in the desert.”
+						</blockquote>
+						<p>Meaning of the hadith · Sahih Muslim</p>
+					</article>
+					<article class="quote">
+						<h3>Hadith · Sahih al-Bukhari 8</h3>
+						<blockquote>
+							“Islam is built upon five”: testifying that none is
+							worthy of worship except Allah and that Muhammad is
+							the Messenger of Allah, establishing prayer, giving
+							zakah, pilgrimage, and fasting Ramadan.
+						</blockquote>
+						<p>Meaning of the hadith · Sahih al-Bukhari</p>
+					</article>
+				</div>
+				<p class="faith-note">
+					Translations above convey the meaning; wording may vary
+					between translations. If you would like to learn more,
+					consider speaking with a knowledgeable Muslim or visiting a
+					local mosque—at your own pace.
+				</p>
+			</section>
+			<footer>May your journey be filled with wonder.</footer>
+		</main>
 
-<script>
-"use strict";
-const KNOWN = {0x24e2:"v1.0",0x24ee:"v1.1",0x2588:"v1.2",0x29c0:"v1.3",0x2a46:"v1.3.1",0x2f8e:"Kiosk",0x3ef8:"v1.3.3",0x3ef9:"v1.3.4",
-  0x471a:"v1.4",0x471b:"v1.5",0x471e:"v1.6",0x0f423d:"v1.6*",0x0f423e:"v1.6**",0x0f423f:"v1.6***",0x4730:"v1.8/v1.9"};
+		<script>
+			"use strict";
+			const KNOWN = {
+				0x24e2: "v1.0",
+				0x24ee: "v1.1",
+				0x2588: "v1.2",
+				0x29c0: "v1.3",
+				0x2a46: "v1.3.1",
+				0x2f8e: "Kiosk",
+				0x3ef8: "v1.3.3",
+				0x3ef9: "v1.3.4",
+				0x471a: "v1.4",
+				0x471b: "v1.5",
+				0x471e: "v1.6",
+				0x0f423d: "v1.6*",
+				0x0f423e: "v1.6**",
+				0x0f423f: "v1.6***",
+				0x4730: "v1.8/v1.9",
+			};
 
-/* ---------- save parsing / conversion ---------- */
-function parse(buf){
-  const dv = new DataView(buf), n = buf.byteLength;
-  if(n < 16) throw new Error("file too small");
-  for(const le of [true,false]){
-    const ver = dv.getUint32(0,le);
-    if(dv.getUint32(4,le) === 0xffffffff && KNOWN[ver]){
-      const count = Math.floor((n-12)/8);
-      if(n-12-count*8 !== 4 || dv.getUint32(12+count*8,le) !== 0xffffffff) throw new Error("unexpected end of file");
-      const hashes = new Uint32Array(count), vals = new Uint8Array(count*4);
-      for(let i=0;i<count;i++){
-        hashes[i] = dv.getUint32(12+8*i,le);
-        vals.set(new Uint8Array(buf,16+8*i,4),4*i);
-      }
-      return {le, ver, flag:dv.getUint32(8,le), count, hashes, vals};
-    }
-  }
-  throw new Error("not a recognized BotW save");
-}
-function isText(v,o){
-  let end = 4; while(end>0 && v[o+end-1]===0) end--;
-  if(!end) return false;
-  for(let k=0;k<end;k++){ const b=v[o+k]; if(b<0x20||b>=0x7f) return false; }
-  return true;
-}
-function isZero(v,o){ return !(v[o]|v[o+1]|v[o+2]|v[o+3]); }
-/* string arrays: runs of >= 8 entries with one hash where every non-zero value is ASCII text */
-function stringFlags(p){
-  const f = new Uint8Array(p.count);
-  let i = 0;
-  while(i < p.count){
-    let j = i; while(j<p.count && p.hashes[j]===p.hashes[i]) j++;
-    if(j-i >= 8){
-      let ok = true, nz = 0;
-      for(let k=i;k<j;k++){
-        if(!isZero(p.vals,4*k)){ nz++; if(!isText(p.vals,4*k)){ ok=false; break; } }
-      }
-      if(ok && nz) f.fill(1,i,j);
-    }
-    i = j;
-  }
-  return f;
-}
-function convert(src, tpl){
-  const flags = stringFlags(src), pool = new Map();
-  for(let i=0;i<src.count;i++){
-    const raw = src.vals.subarray(4*i,4*i+4);
-    const v = flags[i] ? raw : Uint8Array.of(raw[3],raw[2],raw[1],raw[0]); /* strings raw, numbers BE -> LE */
-    const h = src.hashes[i];
-    if(!pool.has(h)) pool.set(h,[]);
-    pool.get(h).push(v);
-  }
-  const used = new Map(), out = new Uint8Array(16+8*tpl.count), dv = new DataView(out.buffer);
-  dv.setUint32(0,tpl.ver,true); dv.setUint32(4,0xffffffff,true); dv.setUint32(8,tpl.flag,true);
-  let tplOnly = 0;
-  for(let k=0;k<tpl.count;k++){
-    const h = tpl.hashes[k], list = pool.get(h), u = used.get(h)||0;
-    let v;
-    if(list && u < list.length){ v = list[u]; used.set(h,u+1); }
-    else { v = tpl.vals.subarray(4*k,4*k+4); tplOnly++; }
-    dv.setUint32(12+8*k,h,true);
-    out.set(v,16+8*k);
-  }
-  dv.setUint32(12+8*tpl.count,0xffffffff,true);
-  let dropped = 0; for(const [h,l] of pool) dropped += l.length-(used.get(h)||0);
-  return {data:out, tplOnly, dropped};
-}
+			/* ---------- save parsing / conversion ---------- */
+			function parse(buf) {
+				const dv = new DataView(buf),
+					n = buf.byteLength;
+				if (n < 16) throw new Error("file too small");
+				for (const le of [true, false]) {
+					const ver = dv.getUint32(0, le);
+					if (dv.getUint32(4, le) === 0xffffffff && KNOWN[ver]) {
+						const count = Math.floor((n - 12) / 8);
+						if (
+							n - 12 - count * 8 !== 4 ||
+							dv.getUint32(12 + count * 8, le) !== 0xffffffff
+						)
+							throw new Error("unexpected end of file");
+						const hashes = new Uint32Array(count),
+							vals = new Uint8Array(count * 4);
+						for (let i = 0; i < count; i++) {
+							hashes[i] = dv.getUint32(12 + 8 * i, le);
+							vals.set(new Uint8Array(buf, 16 + 8 * i, 4), 4 * i);
+						}
+						return {
+							le,
+							ver,
+							flag: dv.getUint32(8, le),
+							count,
+							hashes,
+							vals,
+						};
+					}
+				}
+				throw new Error("not a recognized BotW save");
+			}
+			function isText(v, o) {
+				let end = 4;
+				while (end > 0 && v[o + end - 1] === 0) end--;
+				if (!end) return false;
+				for (let k = 0; k < end; k++) {
+					const b = v[o + k];
+					if (b < 0x20 || b >= 0x7f) return false;
+				}
+				return true;
+			}
+			function isZero(v, o) {
+				return !(v[o] | v[o + 1] | v[o + 2] | v[o + 3]);
+			}
+			/* string arrays: runs of >= 8 entries with one hash where every non-zero value is ASCII text */
+			function stringFlags(p) {
+				const f = new Uint8Array(p.count);
+				let i = 0;
+				while (i < p.count) {
+					let j = i;
+					while (j < p.count && p.hashes[j] === p.hashes[i]) j++;
+					if (j - i >= 8) {
+						let ok = true,
+							nz = 0;
+						for (let k = i; k < j; k++) {
+							if (!isZero(p.vals, 4 * k)) {
+								nz++;
+								if (!isText(p.vals, 4 * k)) {
+									ok = false;
+									break;
+								}
+							}
+						}
+						if (ok && nz) f.fill(1, i, j);
+					}
+					i = j;
+				}
+				return f;
+			}
+			function convert(src, tpl) {
+				const flags = stringFlags(src),
+					pool = new Map();
+				for (let i = 0; i < src.count; i++) {
+					const raw = src.vals.subarray(4 * i, 4 * i + 4);
+					const v = flags[i]
+						? raw
+						: Uint8Array.of(
+								raw[3],
+								raw[2],
+								raw[1],
+								raw[0],
+							); /* strings raw, numbers BE -> LE */
+					const h = src.hashes[i];
+					if (!pool.has(h)) pool.set(h, []);
+					pool.get(h).push(v);
+				}
+				const used = new Map(),
+					out = new Uint8Array(16 + 8 * tpl.count),
+					dv = new DataView(out.buffer);
+				dv.setUint32(0, tpl.ver, true);
+				dv.setUint32(4, 0xffffffff, true);
+				dv.setUint32(8, tpl.flag, true);
+				let tplOnly = 0;
+				for (let k = 0; k < tpl.count; k++) {
+					const h = tpl.hashes[k],
+						list = pool.get(h),
+						u = used.get(h) || 0;
+					let v;
+					if (list && u < list.length) {
+						v = list[u];
+						used.set(h, u + 1);
+					} else {
+						v = tpl.vals.subarray(4 * k, 4 * k + 4);
+						tplOnly++;
+					}
+					dv.setUint32(12 + 8 * k, h, true);
+					out.set(v, 16 + 8 * k);
+				}
+				dv.setUint32(12 + 8 * tpl.count, 0xffffffff, true);
+				let dropped = 0;
+				for (const [h, l] of pool)
+					dropped += l.length - (used.get(h) || 0);
+				return { data: out, tplOnly, dropped };
+			}
 
-/* ---------- minimal ZIP writer (stored) ---------- */
-const CRC = new Uint32Array(256);
-for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; CRC[n]=c>>>0; }
-function crc32(b){ let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c = CRC[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
-function makeZip(files){
-  const enc = new TextEncoder(), chunks = [], central = []; let off = 0;
-  for(const f of files){
-    const name = enc.encode(f.name), crc = crc32(f.data), size = f.data.length;
-    const lh = new DataView(new ArrayBuffer(30));
-    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(10,0,true); lh.setUint16(12,0x21,true);
-    lh.setUint32(14,crc,true); lh.setUint32(18,size,true); lh.setUint32(22,size,true); lh.setUint16(26,name.length,true);
-    chunks.push(new Uint8Array(lh.buffer),name,f.data);
-    const ch = new DataView(new ArrayBuffer(46));
-    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(14,0x21,true);
-    ch.setUint32(16,crc,true); ch.setUint32(20,size,true); ch.setUint32(24,size,true); ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
-    central.push(new Uint8Array(ch.buffer),name);
-    off += 30+name.length+size;
-  }
-  const csize = central.reduce((a,b)=>a+b.length,0);
-  const end = new DataView(new ArrayBuffer(22));
-  end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true);
-  end.setUint32(12,csize,true); end.setUint32(16,off,true);
-  return new Blob([...chunks,...central,new Uint8Array(end.buffer)],{type:"application/zip"});
-}
+			/* ---------- minimal ZIP writer (stored) ---------- */
+			const CRC = new Uint32Array(256);
+			for (let n = 0; n < 256; n++) {
+				let c = n;
+				for (let k = 0; k < 8; k++)
+					c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+				CRC[n] = c >>> 0;
+			}
+			function crc32(b) {
+				let c = 0xffffffff;
+				for (let i = 0; i < b.length; i++)
+					c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8);
+				return (c ^ 0xffffffff) >>> 0;
+			}
+			function makeZip(files) {
+				const enc = new TextEncoder(),
+					chunks = [],
+					central = [];
+				let off = 0;
+				for (const f of files) {
+					const name = enc.encode(f.name),
+						crc = crc32(f.data),
+						size = f.data.length;
+					const lh = new DataView(new ArrayBuffer(30));
+					lh.setUint32(0, 0x04034b50, true);
+					lh.setUint16(4, 20, true);
+					lh.setUint16(10, 0, true);
+					lh.setUint16(12, 0x21, true);
+					lh.setUint32(14, crc, true);
+					lh.setUint32(18, size, true);
+					lh.setUint32(22, size, true);
+					lh.setUint16(26, name.length, true);
+					chunks.push(new Uint8Array(lh.buffer), name, f.data);
+					const ch = new DataView(new ArrayBuffer(46));
+					ch.setUint32(0, 0x02014b50, true);
+					ch.setUint16(4, 20, true);
+					ch.setUint16(6, 20, true);
+					ch.setUint16(14, 0x21, true);
+					ch.setUint32(16, crc, true);
+					ch.setUint32(20, size, true);
+					ch.setUint32(24, size, true);
+					ch.setUint16(28, name.length, true);
+					ch.setUint32(42, off, true);
+					central.push(new Uint8Array(ch.buffer), name);
+					off += 30 + name.length + size;
+				}
+				const csize = central.reduce((a, b) => a + b.length, 0);
+				const end = new DataView(new ArrayBuffer(22));
+				end.setUint32(0, 0x06054b50, true);
+				end.setUint16(8, files.length, true);
+				end.setUint16(10, files.length, true);
+				end.setUint32(12, csize, true);
+				end.setUint32(16, off, true);
+				return new Blob(
+					[...chunks, ...central, new Uint8Array(end.buffer)],
+					{ type: "application/zip" },
+				);
+			}
 
-/* ---------- UI ---------- */
-const SLOTS = {
-  wiiu:   [["game","game_data.sav"],["cap","caption.sav"],["jpg","caption.jpg"]],
-  switch: [["game","game_data.sav"],["cap","caption.sav"]]
-};
-const state = {wiiu:{}, switch:{}};   /* slot -> {name, buf, parsed?, error?} */
-let activeZone = "wiiu", urls = [];
+			/* ---------- UI ---------- */
+			const SLOTS = {
+				wiiu: [
+					["game", "game_data.sav"],
+					["cap", "caption.sav"],
+					["jpg", "caption.jpg"],
+				],
+				switch: [
+					["game", "game_data.sav"],
+					["cap", "caption.sav"],
+				],
+			};
+			const state = {
+				wiiu: {},
+				switch: {},
+			}; /* slot -> {name, buf, parsed?, error?} */
+			let activeZone = "wiiu",
+				urls = [];
 
-function classify(name){
-  if(/\.jpe?g$/i.test(name)) return "jpg";
-  if(/game_data/i.test(name)) return "game";
-  if(/caption/i.test(name)) return "cap";
-  return null;
-}
-async function addFiles(zone, list){
-  for(const file of list){
-    const slot = classify(file.name);
-    if(!slot || !SLOTS[zone].some(s=>s[0]===slot)){ state[zone]["?"+file.name] = {name:file.name, error:"not needed here"}; continue; }
-    const entry = {name:file.name, buf:await file.arrayBuffer()};
-    if(slot !== "jpg"){
-      try{
-        entry.parsed = parse(entry.buf);
-        const wantLE = zone === "switch";
-        if(entry.parsed.le !== wantLE) entry.error = "this looks like a " + (entry.parsed.le ? "Switch" : "Wii U") + " save, wrong box";
-      }catch(e){ entry.error = e.message; }
-    }
-    state[zone][slot] = entry;
-  }
-  render();
-}
-function render(){
-  for(const zone of ["wiiu","switch"]){
-    const box = document.getElementById("rows-"+zone); box.textContent = "";
-    for(const [slot,label] of SLOTS[zone]){
-      const e = state[zone][slot], row = document.createElement("div"), n = document.createElement("span"), s = document.createElement("span");
-      row.className = "row"; n.className = "n"; n.textContent = label; s.className = "s";
-      if(!e){ s.textContent = "waiting…"; }
-      else if(e.error){ s.textContent = e.name + ": " + e.error; s.classList.add("err"); }
-      else { s.textContent = "✓ " + e.name + (e.parsed ? " (" + KNOWN[e.parsed.ver] + ", " + e.parsed.count + " entries)" : " (thumbnail)"); s.classList.add("ok"); }
-      row.append(n,s); box.append(row);
-    }
-  }
-  buildOutputs();
-}
-function good(zone,slot){ const e = state[zone][slot]; return e && !e.error ? e : null; }
-function buildOutputs(){
-  urls.forEach(u=>URL.revokeObjectURL(u)); urls = [];
-  const outs = [], notes = [];
-  for(const [slot,name] of [["game","game_data.sav"],["cap","caption.sav"]]){
-    const a = good("wiiu",slot), b = good("switch",slot);
-    if(a && b){
-      const r = convert(a.parsed,b.parsed);
-      outs.push({name, data:r.data});
-      notes.push(name + ": " + r.tplOnly + " Switch-only entries kept from the template, " + r.dropped + " Wii U entries dropped.");
-    }
-  }
-  const j = good("wiiu","jpg"); if(j) outs.push({name:"caption.jpg", data:new Uint8Array(j.buf)});
-  const sec = document.getElementById("out");
-  sec.classList.toggle("hidden", !outs.length);
-  if(!outs.length) return;
-  const box = document.getElementById("files"); box.textContent = "";
-  for(const f of outs){
-    const url = URL.createObjectURL(new Blob([f.data])); urls.push(url);
-    const row = document.createElement("div"), label = document.createElement("span"), a = document.createElement("a");
-    row.className = "file"; label.textContent = f.name + " (" + f.data.length.toLocaleString() + " bytes)";
-    a.className = "btn sec"; a.href = url; a.download = f.name; a.textContent = "Download";
-    row.append(label,a); box.append(row);
-  }
-  if(!good("wiiu","game") || !good("switch","game")) notes.push("To convert game_data.sav, add it in both boxes.");
-  if(!good("wiiu","cap") || !good("switch","cap")) notes.push("To convert caption.sav, add it in both boxes.");
-  const ul = document.getElementById("notes"); ul.textContent = "";
-  for(const t of notes){ const li = document.createElement("li"); li.textContent = t; ul.append(li); }
-  document.getElementById("zipbtn").onclick = () => {
-    const url = URL.createObjectURL(makeZip(outs));
-    const a = document.createElement("a"); a.href = url; a.download = "botw-switch-save.zip"; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
-  };
-}
+			function classify(name) {
+				if (/\.jpe?g$/i.test(name)) return "jpg";
+				if (/game_data/i.test(name)) return "game";
+				if (/caption/i.test(name)) return "cap";
+				return null;
+			}
+			async function addFiles(zone, list) {
+				for (const file of list) {
+					const slot = classify(file.name);
+					if (!slot || !SLOTS[zone].some((s) => s[0] === slot)) {
+						state[zone]["?" + file.name] = {
+							name: file.name,
+							error: "not needed here",
+						};
+						continue;
+					}
+					const entry = {
+						name: file.name,
+						buf: await file.arrayBuffer(),
+					};
+					if (slot !== "jpg") {
+						try {
+							entry.parsed = parse(entry.buf);
+							const wantLE = zone === "switch";
+							if (entry.parsed.le !== wantLE)
+								entry.error =
+									"this looks like a " +
+									(entry.parsed.le ? "Switch" : "Wii U") +
+									" save, wrong box";
+						} catch (e) {
+							entry.error = e.message;
+						}
+					}
+					state[zone][slot] = entry;
+				}
+				render();
+			}
+			function render() {
+				for (const zone of ["wiiu", "switch"]) {
+					const box = document.getElementById("rows-" + zone);
+					box.textContent = "";
+					for (const [slot, label] of SLOTS[zone]) {
+						const e = state[zone][slot],
+							row = document.createElement("div"),
+							n = document.createElement("span"),
+							s = document.createElement("span");
+						row.className = "row";
+						n.className = "n";
+						n.textContent = label;
+						s.className = "s";
+						if (!e) {
+							s.textContent = "waiting…";
+						} else if (e.error) {
+							s.textContent = e.name + ": " + e.error;
+							s.classList.add("err");
+						} else {
+							s.textContent =
+								"✓ " +
+								e.name +
+								(e.parsed
+									? " (" +
+										KNOWN[e.parsed.ver] +
+										", " +
+										e.parsed.count +
+										" entries)"
+									: " (thumbnail)");
+							s.classList.add("ok");
+						}
+						row.append(n, s);
+						box.append(row);
+					}
+				}
+				buildOutputs();
+			}
+			function good(zone, slot) {
+				const e = state[zone][slot];
+				return e && !e.error ? e : null;
+			}
+			function buildOutputs() {
+				urls.forEach((u) => URL.revokeObjectURL(u));
+				urls = [];
+				const outs = [],
+					notes = [];
+				for (const [slot, name] of [
+					["game", "game_data.sav"],
+					["cap", "caption.sav"],
+				]) {
+					const a = good("wiiu", slot),
+						b = good("switch", slot);
+					if (a && b) {
+						const r = convert(a.parsed, b.parsed);
+						outs.push({ name, data: r.data });
+						notes.push(
+							name +
+								": " +
+								r.tplOnly +
+								" Switch-only entries kept from the template, " +
+								r.dropped +
+								" Wii U entries dropped.",
+						);
+					}
+				}
+				const j = good("wiiu", "jpg");
+				if (j)
+					outs.push({
+						name: "caption.jpg",
+						data: new Uint8Array(j.buf),
+					});
+				const sec = document.getElementById("out");
+				sec.classList.toggle("hidden", !outs.length);
+				if (!outs.length) return;
+				const box = document.getElementById("files");
+				box.textContent = "";
+				for (const f of outs) {
+					const url = URL.createObjectURL(new Blob([f.data]));
+					urls.push(url);
+					const row = document.createElement("div"),
+						label = document.createElement("span"),
+						a = document.createElement("a");
+					row.className = "file";
+					label.textContent =
+						f.name +
+						" (" +
+						f.data.length.toLocaleString() +
+						" bytes)";
+					a.className = "btn sec";
+					a.href = url;
+					a.download = f.name;
+					a.textContent = "Download";
+					row.append(label, a);
+					box.append(row);
+				}
+				if (!good("wiiu", "game") || !good("switch", "game"))
+					notes.push(
+						"To convert game_data.sav, add it in both boxes.",
+					);
+				if (!good("wiiu", "cap") || !good("switch", "cap"))
+					notes.push("To convert caption.sav, add it in both boxes.");
+				const ul = document.getElementById("notes");
+				ul.textContent = "";
+				for (const t of notes) {
+					const li = document.createElement("li");
+					li.textContent = t;
+					ul.append(li);
+				}
+				document.getElementById("zipbtn").onclick = () => {
+					const url = URL.createObjectURL(makeZip(outs));
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = "botw-switch-save.zip";
+					a.click();
+					setTimeout(() => URL.revokeObjectURL(url), 1000);
+				};
+			}
 
-/* drag and drop + click to choose */
-const picker = document.getElementById("picker");
-for(const zone of ["wiiu","switch"]){
-  const el = document.getElementById("zone-"+zone);
-  el.addEventListener("dragover", e=>{ e.preventDefault(); el.classList.add("over"); });
-  el.addEventListener("dragleave", ()=>el.classList.remove("over"));
-  el.addEventListener("drop", e=>{ e.preventDefault(); el.classList.remove("over"); addFiles(zone,[...e.dataTransfer.files]); });
-  document.getElementById("browse-"+zone).addEventListener("click", ()=>{ activeZone = zone; picker.value = ""; picker.click(); });
-}
-picker.addEventListener("change", ()=>addFiles(activeZone,[...picker.files]));
-window.addEventListener("dragover", e=>e.preventDefault());
-window.addEventListener("drop", e=>e.preventDefault());
-render();
-</script>
-</body>
+			/* drag and drop + click to choose */
+			const picker = document.getElementById("picker");
+			for (const zone of ["wiiu", "switch"]) {
+				const el = document.getElementById("zone-" + zone);
+				el.addEventListener("dragover", (e) => {
+					e.preventDefault();
+					el.classList.add("over");
+				});
+				el.addEventListener("dragleave", () =>
+					el.classList.remove("over"),
+				);
+				el.addEventListener("drop", (e) => {
+					e.preventDefault();
+					el.classList.remove("over");
+					addFiles(zone, [...e.dataTransfer.files]);
+				});
+				document
+					.getElementById("browse-" + zone)
+					.addEventListener("click", () => {
+						activeZone = zone;
+						picker.value = "";
+						picker.click();
+					});
+			}
+			picker.addEventListener("change", () =>
+				addFiles(activeZone, [...picker.files]),
+			);
+			window.addEventListener("dragover", (e) => e.preventDefault());
+			window.addEventListener("drop", (e) => e.preventDefault());
+			render();
+		</script>
+	</body>
 </html>
